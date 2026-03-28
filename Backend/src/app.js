@@ -19,9 +19,8 @@ app.use(express.static("public"));
 
 app.use(cookieParser());
 
-
-import testRoute from "./routes/test.route.js";
-app.use("/test",testRoute);
+import submissionsRoute from "./routes/submissions.routes.js";
+app.use("/submissions", submissionsRoute);
 
 export default app;
 

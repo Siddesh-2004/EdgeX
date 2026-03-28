@@ -1,22 +1,39 @@
 import axiosConfig from "../configs/axios.config.js";
+import ApiError from "../utils/apiErrors.js";
+import ApiResponse from "../utils/apiResponse.js";
 
+const submitCode = async (source_code, language_id, stdin) => {
+  try {
+    const response = await axiosConfig.post(
+      "/submissions?base64_encoded=false&wait=false",
+      { source_code, language_id, stdin }
+    );
+    console.log(response.status, response.data);
+    return new ApiResponse(response.data, "Code submitted successfully", response.status);
+  } catch (err) {
+    console.log(err);
+    throw new ApiError(err.status, err.response?.data);
+  }
+};
 
-
-
-const getLanguages=async()=>{
-    try{
-        const res=await axiosConfig.get("/languages");
-        return res.data;
-    }catch(err){
-        console.log(err);
-        return null;
+const getSubmission = async (submissionId) => {
+  try {
+    let count = 0;
+    while (count < 5) {
+      const response = await axiosConfig.get(
+        `/submissions/${submissionId}?base64_encoded=true&wait=false&fields=status,stdout,stderr,language_id`
+      );
+      if (response.data.status.id > 2) {
+        return new ApiResponse(response.data, "Submission found", response.status);
+      }
+      count++;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-}
+    throw new ApiError(408, "Submission timed out");
+  } catch (err) {
+    console.log(err);
+    throw new ApiError(err.status, err.response?.data);
+  }
+};
 
-
-
-
-
-
-
-export {getLanguages};
+export { submitCode, getSubmission };
