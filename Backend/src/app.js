@@ -19,8 +19,19 @@ app.use(express.static("public"));
 
 app.use(cookieParser());
 
+
+
+
 import submissionsRoute from "./routes/submissions.routes.js";
 app.use("/submissions", submissionsRoute);
+
+
+
+
+
+
+import problemsRoute from "./routes/problems.route.js";
+app.use("/api/v1/problems", problemsRoute);
 
 export default app;
 
