@@ -1,10 +1,17 @@
 import React from 'react'
 import Landing from './pages/Landing'
 import AddProblems from './pages/AddProblems'
+import { createBrowserRouter,createRoutesFromElements,Route,RouterProvider } from 'react-router-dom'
+import Layout from './Layout'
 function App() {
+  const router=createBrowserRouter(createRoutesFromElements(
+    <Route path='/' element={<Layout/>} >
+      <Route path='' element={<Landing />} />
+      <Route path='addProblems' element={<AddProblems />} />
+    </Route>
+  ))
   return (
-    <Landing/>
-    // <AddProblems />
+    <RouterProvider router={router} />
   )
 }
 
