@@ -52,7 +52,7 @@ const problemSchema = new mongoose.Schema({
     solution:{
         type:String,
     },
-    testCaseSchema:{
+    testCases:{
         type:[testCaseSchema],
     },
     timeLimit:{

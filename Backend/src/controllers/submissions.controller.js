@@ -1,4 +1,4 @@
-import {getSubmission,submitCode} from "../services/judge0.services.js";
+import {getSubmission,submitCode} from "../services/judge0.service.js";
 import asyncHandler from "../utils/asynchandler.js";
 import ApiResponse from "../utils/apiResponse.js";
 import ApiError from "../utils/apiErrors.js";
