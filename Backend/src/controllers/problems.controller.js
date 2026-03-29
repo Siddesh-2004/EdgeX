@@ -3,6 +3,7 @@ import ApiResponse from "../utils/apiResponse.js";
 import ApiError from "../utils/apiErrors.js";
 import ProblemModel from "../models/problems.model.js";
 import askAi from "../services/geminiApi.service.js";
+import { submitBatchSolution, getBatchSubmission } from "../services/judge0.service.js";
 const extractExamples = (examples) => {
   let extracted = "";
   for (const example of examples) {
@@ -13,7 +14,10 @@ const extractExamples = (examples) => {
   }
   return extracted;
 };
-
+const decodeBase64 = (str) => {
+  if (!str) return null;
+  return Buffer.from(str, "base64").toString("utf-8").trim();
+};
 const cleanSolution = (solutionString) => {
   const start = solutionString.indexOf("{");
   const end = solutionString.lastIndexOf("}");
@@ -62,6 +66,7 @@ const getSolution = async (problemId) => {
   try {
     console.log(prompt);
     while (count <= 10) {
+      console.log("Asking Gemini for solution attempt",count,"/",10);
       const solutionString = await askAi(prompt);
       if (solutionString) {
         const solution = cleanSolution(solutionString);
@@ -88,8 +93,6 @@ const getSolution = async (problemId) => {
   }
 };
 
-
-
 const createProblem = asyncHandler(async (req, res) => {
   const { question, examples, constraints } = req.body;
   if (!question || !examples || !constraints) {
@@ -105,13 +108,12 @@ const createProblem = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Failed to create problem");
     }
     return res
-    .status(201)
-    .json(new ApiResponse(problem, "Problem created successfully", 201));
-} catch (err) {
+      .status(201)
+      .json(new ApiResponse(problem, "Problem created successfully", 201));
+  } catch (err) {
     throw new ApiError(err.status, "Failed to create problem", [], err.stack);
-}
+  }
 });
-
 
 const createTestCases = asyncHandler(async (req, res) => {
   const { problemId } = req.params;
@@ -160,7 +162,8 @@ Rules:
   let count = 0;
   try {
     while (count <= 10) {
-      const testCasesString = await askAi(prompt,problemId);
+      console.log("Asking Gemini for test cases attempt",count,"/",10);
+      const testCasesString = await askAi(prompt, problemId);
       if (testCasesString) {
         const testCases = cleanedTestCases(testCasesString);
         const updatedProblem = await ProblemModel.findByIdAndUpdate(
@@ -192,4 +195,78 @@ Rules:
   }
 });
 
-export { createProblem ,createTestCases};
+const getSolutionForTestCases = asyncHandler(async (req, res) => {
+  const { problemId } = req.params;
+  if (!problemId) {
+    throw new ApiError(400, "Missing required fields");
+  }
+  const problem = await ProblemModel.findById(problemId);
+  if (!problem) {
+    throw new ApiError(404, "Problem not found");
+  }
+  const sourceCode = problem.solution;
+  const testCases = problem.testCases;
+  const submissions = [];
+  for (const testCase of testCases) {
+    const submission = {};
+    submission.stdin = testCase.input;
+    submission.language_id = 54;
+    submission.source_code = sourceCode;
+    submissions.push(submission);
+  }
+  let tokens = [];
+  try {
+    const response = await submitBatchSolution(submissions);
+    if (response.statusCode >= 400) {
+      throw new ApiError(response.statusCode, response.data);
+    }
+    tokens = response.data;
+  } catch (err) {
+    console.log(err);
+    throw new ApiError(err.statusCode, err.data);
+  }
+  let tokenString = "";
+  for (const tokenObject of tokens) {
+    tokenString += tokenObject.token + ",";
+  }
+  tokenString = tokenString.slice(0, -1);
+  console.log("tokenString", tokenString);
+  try {
+    const response = await getBatchSubmission(tokenString);
+    if (response.statusCode >= 400) {
+      throw new ApiError(response.statusCode, response.data);
+    }
+    const result = response.data.submissions;
+    for (let i = 0; i < result.length; i++) {
+      console.log("Status ID for submission", i, ":", result[i].status.id);
+      if (result[i].status.id == 3) {
+        testCases[i].expectedOutput = decodeBase64(result[i].stdout);
+      }
+    }
+    console.log("testCases", testCases);
+    const updatedProblem = await ProblemModel.findByIdAndUpdate(
+      problemId,
+      {
+        testCases,
+      },
+      { new: true },
+    );
+    if (!updatedProblem) {
+      throw new ApiError(500, "Failed to update problem");
+    }
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          updatedProblem,
+          "Test cases generated successfully",
+          200,
+        ),
+      );
+  } catch (err) {
+    console.log(err);
+    throw new ApiError(err.statusCode, err.data);
+  }
+});
+
+export { createProblem, createTestCases, getSolutionForTestCases };
