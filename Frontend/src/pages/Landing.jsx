@@ -2,7 +2,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-[#131313] text-[#e5e2e1] font-['Inter'] selection:bg-[#00e5ff] selection:text-[#001f24]">
 
-      {/* ── Nav ── */}
+      {/* ── Nav ──
       <nav className="bg-[#131313]/80 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center w-full px-8 py-4 shadow-[0px_20px_40px_rgba(0,218,243,0.08)] border-b border-white/5">
         <div className="flex items-center gap-12">
           <span className="font-['Space_Grotesk'] text-2xl font-bold tracking-tighter text-[#C3F5FF]">EdgeX</span>
@@ -20,7 +20,7 @@ export default function Landing() {
             Get Started
           </button>
         </div>
-      </nav>
+      </nav> */}
 
       <main>
 
@@ -63,16 +63,16 @@ export default function Landing() {
                   <div className="w-3 h-3 rounded-full bg-[#c3f5ff]/40" />
                 </div>
                 <div className="text-xs font-['JetBrains_Mono'] text-slate-500 uppercase tracking-widest">
-                  solution.py — EdgeX Runner
+                  solution.cpp— EdgeX Editor
                 </div>
                 <span className="material-symbols-outlined text-slate-400" style={{ fontSize: 18 }}>settings</span>
               </div>
 
               {/* Editor body */}
-              <div className="grid grid-cols-1 md:grid-cols-12 min-h-[500px]">
+              {/* <div className="grid grid-cols-1 md:grid-cols-12 min-h-[500px]"> */}
 
                 {/* Code panel */}
-                <div className="md:col-span-7 p-6 font-['JetBrains_Mono'] text-sm bg-[#0e0e0e]">
+                {/* <div className="md:col-span-7 p-6 font-['JetBrains_Mono'] text-sm bg-[#0e0e0e]">
                   <div className="flex gap-4">
                     <div className="text-slate-600 text-right select-none w-8 leading-6">
                       {[1,2,3,4,5,6,7,8,9,10].map(n => <div key={n}>{n}</div>)}
@@ -92,7 +92,34 @@ export default function Landing() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
+                <div className="grid grid-cols-1 md:grid-cols-12 min-h-[500px]">
+  {/* Code panel */}
+  <div className="md:col-span-7 p-6 font-['JetBrains_Mono'] text-sm bg-[#0e0e0e]">
+    <div className="flex gap-4">
+      <div className="text-slate-600 text-right select-none w-8 leading-6">
+        {[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(n => <div key={n}>{n}</div>)}
+      </div>
+      <div className="text-slate-300 leading-6">
+        <div><span className="text-[#ffb4ab]">#include</span> <span className="text-[#ffeac0]">&lt;unordered_map&gt;</span></div>
+        <div><span className="text-[#ffb4ab]">#include</span> <span className="text-[#ffeac0]">&lt;vector&gt;</span></div>
+        <div>&nbsp;</div>
+        <div><span className="text-[#ffeac0]">class </span><span className="text-[#c3f5ff]">Solution</span> {"{"}</div>
+        <div><span className="text-[#ffeac0]">public</span>:</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;<span className="text-[#ffeac0]">int</span>&gt; <span className="text-[#c3f5ff]">twoSum</span>(vector&lt;<span className="text-[#ffeac0]">int</span>&gt;&amp; nums, <span className="text-[#ffeac0]">int</span> target) {"{"}</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unordered_map&lt;<span className="text-[#ffeac0]">int</span>, <span className="text-[#ffeac0]">int</span>&gt; seen;</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#ffeac0]">for </span>(<span className="text-[#ffeac0]">int</span> i = <span className="text-[#b8c9d3]">0</span>; i &lt; nums.size(); i++) {"{"}</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#ffeac0]">int</span> diff = target - nums[i];</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#ffeac0]">if </span>(seen.count(diff)) <span className="text-[#ffeac0]">return </span>{"{"} seen[diff], i {"}"};</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seen[nums[i]] = i;</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"}"}</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#ffeac0]">return </span>{"{}"};</div>
+        <div className="bg-[#c3f5ff]/10 border-l-2 border-[#00e5ff] px-2 py-1 block w-full">
+          {"// EdgeX generating edge cases..."}
+        </div>
+      </div>
+    </div>
+  </div>
 
                 {/* Test runner panel */}
                 <div className="md:col-span-5 bg-[#201f1f] border-l border-white/5 p-6 flex flex-col">
@@ -204,7 +231,7 @@ export default function Landing() {
                   </div>
                   <h3 className="text-2xl font-bold mb-4">Fast Execution</h3>
                   <p className="text-slate-400 leading-relaxed">
-                    Our proprietary kernel executes code in isolated micro-containers in under 20ms, providing near-instantaneous feedback loops for developers.
+                   Throught our smart ai detection of failing test cases.We are able to produce faster code execution with minimal cost
                   </p>
                 </div>
                 <div className="mt-8 overflow-hidden h-32 rounded-lg bg-[#0e0e0e] relative">
@@ -249,8 +276,8 @@ export default function Landing() {
                 <div className="w-12 h-12 rounded-lg bg-[#c3f5ff]/10 flex items-center justify-center mb-6">
                   <span className="material-symbols-outlined text-[#c3f5ff]">code_blocks</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2">20+ Languages</h3>
-                <p className="text-slate-500 text-xs">From C++ and Rust to Python and Zig. We support the cutting edge.</p>
+                <h3 className="text-lg font-bold mb-2">3 Languages</h3>
+                <p className="text-slate-500 text-xs">C++,C,Java ,We support the best and most used languages for DSA</p>
               </div>
 
             </div>
@@ -281,7 +308,7 @@ export default function Landing() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="bg-[#131313] w-full border-t border-white/5 px-12 py-16 flex flex-col md:flex-row justify-between items-center gap-8">
+      {/* <footer className="bg-[#131313] w-full border-t border-white/5 px-12 py-16 flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="flex flex-col gap-4 items-center md:items-start">
           <span className="font-['Space_Grotesk'] font-bold text-[#C3F5FF] text-xl">EdgeX</span>
           <p className="text-xs uppercase tracking-widest text-slate-500">© 2024 EdgeX. Kinetic Precision.</p>
@@ -308,7 +335,7 @@ export default function Landing() {
             <span className="material-symbols-outlined text-slate-400" style={{ fontSize: 18 }}>public</span>
           </button>
         </div>
-      </footer>
+      </footer> */}
 
     </div>
   );

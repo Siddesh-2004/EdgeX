@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+
+@import "tailwindcss";
+
+@theme {
+  --font-family-Space_Grotesk: "Space Grotesk", sans-serif;
+  --font-family-JetBrains_Mono: "JetBrains Mono", monospace;
+}
