@@ -1,9 +1,8 @@
 import React from 'react'
-
+import Landing from './pages/Landing'
 function App() {
   return (
-    <div className='text-amber-200 bg-amber-900' >Appsfdklfjsdkj</div>
-    
+    <Landing />
   )
 }
 
