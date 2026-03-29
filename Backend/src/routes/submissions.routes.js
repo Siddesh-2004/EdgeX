@@ -3,6 +3,6 @@ import { createSubmission } from "../controllers/submissions.controller.js";
 
 const router = express.Router();
 
-router.post("/create", createSubmission);
+router.post("/create/:problemId", createSubmission);
 
 export default router;

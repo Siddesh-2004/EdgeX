@@ -4,6 +4,7 @@ import ApiError from "../utils/apiErrors.js";
 import ProblemModel from "../models/problems.model.js";
 import askAi from "../services/geminiApi.service.js";
 import { submitBatchSolution, getBatchSubmission } from "../services/judge0.service.js";
+import decodeBase64 from "../utils/decodeBase64.js";
 const extractExamples = (examples) => {
   let extracted = "";
   for (const example of examples) {
@@ -14,10 +15,7 @@ const extractExamples = (examples) => {
   }
   return extracted;
 };
-const decodeBase64 = (str) => {
-  if (!str) return null;
-  return Buffer.from(str, "base64").toString("utf-8").trim();
-};
+
 const cleanSolution = (solutionString) => {
   const start = solutionString.indexOf("{");
   const end = solutionString.lastIndexOf("}");

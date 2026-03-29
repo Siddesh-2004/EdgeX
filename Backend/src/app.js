@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 
 import submissionsRoute from "./routes/submissions.routes.js";
-app.use("/submissions", submissionsRoute);
+app.use("/api/v1/submissions", submissionsRoute);
 
 
 

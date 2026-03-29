@@ -8,7 +8,7 @@ const submitCode = async (source_code, language_id, stdin) => {
       "/submissions?base64_encoded=false&wait=false",
       { source_code, language_id, stdin },
     );
-    console.log(response.status, response.data);
+    console.log("Response from judge0 submit code", response.status, response.data.token);
     return new ApiResponse(
       response.data,
       "Code submitted successfully",
