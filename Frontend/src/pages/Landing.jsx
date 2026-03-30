@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function Landing() {
   return (
     <div className="min-h-screen bg-[#131313] text-[#e5e2e1] font-['Inter'] selection:bg-[#00e5ff] selection:text-[#001f24]">
@@ -41,9 +42,11 @@ export default function Landing() {
               The code execution platform that lets you run code against auto-generated test cases in a LeetCode-style environment.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-4 rounded-lg bg-gradient-to-br from-[#c3f5ff] to-[#00e5ff] text-[#00363d] font-bold text-lg hover:brightness-110 transition-all active:scale-95">
-                Get Started
-              </button>
+                <Link to="/addProblems">
+                  <button className="px-8 py-4 rounded-lg bg-gradient-to-br from-[#c3f5ff] to-[#00e5ff] text-[#00363d] font-bold text-lg hover:brightness-110 transition-all active:scale-95">
+                    Get Started
+                  </button>
+                </Link>
               <button className="px-8 py-4 rounded-lg border border-[rgba(132,147,150,0.15)] bg-[#2a2a2a] text-[#e5e2e1] font-medium text-lg hover:bg-[#393939] transition-all active:scale-95 flex items-center justify-center gap-2">
                 <span className="material-symbols-outlined" style={{ fontSize: 20 }}>play_circle</span>
                 Watch Demo
@@ -295,9 +298,11 @@ export default function Landing() {
               Join thousands of developers who are shipping more reliable code with EdgeX.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
-              <button className="px-10 py-5 rounded-lg bg-gradient-to-br from-[#c3f5ff] to-[#00e5ff] text-[#00363d] font-bold text-xl hover:scale-105 transition-all active:scale-95">
-                Launch Console
-              </button>
+                <Link to="/addProblems">
+                  <button className="px-10 py-5 rounded-lg bg-gradient-to-br from-[#c3f5ff] to-[#00e5ff] text-[#00363d] font-bold text-xl hover:scale-105 transition-all active:scale-95">
+                    Get Started
+                  </button>
+                </Link>
               <button className="px-10 py-5 rounded-lg bg-[#0e0e0e] text-[#e5e2e1] font-medium border border-white/5 hover:bg-[#131313] transition-all active:scale-95">
                 Contact Sales
               </button>

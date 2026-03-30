@@ -58,9 +58,17 @@ const problemSchema = new mongoose.Schema({
     timeLimit:{
         type:Number,
     },
-    MemoryLimit:{
+    memoryLimit:{
         type:Number,
     },
+    inputFormat:{
+        type:String,
+        required:true
+    },
+    outputFormat:{
+        type:String,
+        required:true
+    }
 },{
     timestamps: true,
 

@@ -92,8 +92,8 @@ const getSolution = async (problemId) => {
 };
 
 const createProblem = asyncHandler(async (req, res) => {
-  const { question, examples, constraints } = req.body;
-  if (!question || !examples || !constraints) {
+  const { question, examples, constraints,inputFormat,outputFormat } = req.body;
+  if (!question || !examples || !constraints|| !inputFormat || !outputFormat) {
     throw new ApiError(400, "Missing required fields");
   }
   try {
@@ -101,6 +101,8 @@ const createProblem = asyncHandler(async (req, res) => {
       question,
       examples,
       constraints,
+      inputFormat,
+      outputFormat
     });
     if (!problem) {
       throw new ApiError(500, "Failed to create problem");
@@ -132,7 +134,8 @@ const createTestCases = asyncHandler(async (req, res) => {
 Problem: ${problem.question}
 Constraints: ${problem.constraints.join(", ")}
 Examples: ${extractExamples(problem.examples)}
-
+inputFormat:${problem.inputFormat}
+outputFormat:${problem.outputFormat}
 Generate 1 test cases for EACH of the following types:
 - basic
 - edge
