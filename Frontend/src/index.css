@@ -1,9 +1,19 @@
 @import "tailwindcss";
 
 
-@import "tailwindcss";
+
 
 @theme {
   --font-family-Space_Grotesk: "Space Grotesk", sans-serif;
   --font-family-JetBrains_Mono: "JetBrains Mono", monospace;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #353534;
 }
