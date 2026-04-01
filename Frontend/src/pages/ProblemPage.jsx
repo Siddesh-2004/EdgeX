@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProblemPanel from "../components/ProblemPanel";
 import CodeEditor from "../components/CodeEditor";
-
+import {useParams} from 'react-router-dom'
 export default function ProblemPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [testResults, setTestResults] = useState(null);
+  const {problemId}= useParams();
+  console.log(problemId);
+  const loadProblem=async()=>{
+    try{
+      const problem= await 
+    }catch(err){
 
+    }
+  }
   const handleRun = async (code, language) => {
     setIsRunning(true);
     setTestResults(null);

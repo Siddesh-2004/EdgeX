@@ -270,4 +270,25 @@ const getSolutionForTestCases = asyncHandler(async (req, res) => {
   }
 });
 
-export { createProblem, createTestCases, getSolutionForTestCases };
+
+const getProblem=asyncHandler(async (req, res) => {
+  const { problemId } = req.params;
+  if (!problemId) {
+    throw new ApiError(400, "Missing required fields");
+  }
+  const problem = await ProblemModel.findById(problemId);
+  if (!problem) {
+    throw new ApiError(404, "Problem not found");
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        problem,
+        "Problem retrieved successfully",
+        200,
+      ),
+    );
+});
+
+export { createProblem, createTestCases, getSolutionForTestCases,getProblem};
