@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Description from "./Description";
-
+import TestCaseCard from "./TestCaseCard";
 const sampleProblem = {
   title: "Compare the Triplets",
   difficulty: "Easy",
@@ -19,6 +19,38 @@ const sampleProblem = {
         "Comparing the 0th elements, 5 > 3 so Alice receives a point. Comparing the 1st and 2nd elements, 6 = 6 and 7 < 10 so Bob receives a point. The return array is [1, 1].",
     },
   ],
+  testCases:[
+    {
+        input:"5 6 7\n3 6 10",
+        expectedOutput:"1 1",
+        output:"1 0",
+        staus:"Accepted"
+    },
+    {
+        input:"5 6 7\n3 6 10",
+        expectedOutput:"1 1",
+        output:"1 0",
+        staus:"Accepted"
+    },
+    {
+        input:"5 6 7\n3 6 10",
+        expectedOutput:"1 1",
+        output:"1 0",
+        staus:"Accepted"
+    },
+    {
+        input:"5 6 7\n3 6 10",
+        expectedOutput:"1 1",
+        output:"1 0",
+        staus:"Accepted"
+    },
+    {
+        input:"5 6 7\n3 6 10",
+        expectedOutput:"1 1",
+        output:"1 0",
+        staus:"Accepted"
+    }
+  ]
 };
 
 export default function ProblemPanel({ problem = sampleProblem }) {
@@ -73,9 +105,9 @@ export default function ProblemPanel({ problem = sampleProblem }) {
       <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
         {activeTab === "description" && <Description problem={problem} />}
         {activeTab === "testcases" && (
-          <p className="text-[#849396] font-['JetBrains_Mono'] text-xs uppercase tracking-widest">
-            Test Cases coming soon...
-          </p>
+          problem.testCases.map((testCase, index) => (
+            <TestCaseCard key={index} testCase={testCase} />
+          ))
         )}
       </div>
 

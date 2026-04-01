@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../axios/axios.config.js";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateProblem() {
   const [question, setQuestion] = useState("");
@@ -7,11 +8,12 @@ export default function CreateProblem() {
   const [outputFormat, setOutputFormat] = useState("");
   const [constraints, setConstraints] = useState([{ id: 1, value: "" }]);
   const [examples, setExamples] = useState([
-    { id: 1, input: "4\n2 7 11 15\n9", output: "0 1", explanation: "" },
+    {},
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const navigate=useNavigate();
 
   // ── Constraints ──
   const addConstraint = () =>
@@ -59,6 +61,7 @@ export default function CreateProblem() {
       if (!res.data) {
         throw new Error("Failed to save problem.");
       }
+      const problemId = res.data.data._id;
 
       setSubmitSuccess(true);
       setQuestion("");
@@ -66,6 +69,8 @@ export default function CreateProblem() {
       setOutputFormat("");
       setConstraints([{ id: Date.now(), value: "" }]);
       setExamples([{ id: Date.now(), input: "", output: "", explanation: "" }]);
+      let path="/problems/"+problemId;
+      navigate(path);
     } catch (err) {
       setSubmitError(err.response?.data?.message || err.message || "Failed to save problem.");
     } finally {
