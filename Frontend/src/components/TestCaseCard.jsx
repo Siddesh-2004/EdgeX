@@ -11,7 +11,9 @@ export default function TestCaseCard({ testCase = sampleTestCase, index = 0, tot
   const [isOpen, setIsOpen] = useState(false);
 
   if (!testCase) return null;
-
+  if(!testCase.status){
+    testCase.status="never ran";
+  }
   const isAccepted = testCase.status === "accepted";
 
   const statusStyles = isAccepted
@@ -43,12 +45,14 @@ export default function TestCaseCard({ testCase = sampleTestCase, index = 0, tot
             expand_more
           </span>
           <span className="font-['Space_Grotesk'] font-semibold text-lg tracking-tight text-[#e5e2e1]">
-            Test Case {index}
+            Test Case {index+1}
           </span>
         </div>
+        {testCase.status!=="never ran"?
         <span className={`px-3 py-1 text-[10px] font-bold tracking-[0.15em] uppercase border rounded-full ${statusStyles}`}>
+          
           {isAccepted ? "Accepted" : "Wrong Answer"}
-        </span>
+        </span>:null}
       </button>
 
       {/* ── Expanded Content ── */}

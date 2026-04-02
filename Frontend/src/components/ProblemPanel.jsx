@@ -1,60 +1,25 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import Description from "./Description";
 import TestCaseCard from "./TestCaseCard";
-const sampleProblem = {
-  title: "Compare the Triplets",
-  difficulty: "Easy",
-  question:
-    "Alice and Bob each created one problem for HackerRank. A reviewer rates the two challenges, awarding points on a scale from 1 to 100 for three categories: problem clarity, originality, and difficulty.\n\nThe rating for Alice's challenge is the triplet a = (a[0], a[1], a[2]), and the rating for Bob's challenge is the triplet b = (b[0], b[1], b[2]).\n\nThe task is to calculate their comparison points by comparing each category:\n- If a[i] > b[i], then Alice is awarded 1 point.\n- If a[i] < b[i], then Bob is awarded 1 point.\n- If a[i] = b[i], then neither person receives a point.\n\nComparison points is the total points a person earned. Given a and b, determine their respective comparison points.",
-  inputFormat:
-    "The first line contains 3 space-separated integers, a[0], a[1], and a[2], the respective values in triplet a.\nThe second line contains 3 space-separated integers, b[0], b[1], and b[2], the respective values in triplet b.",
-  outputFormat:
-    "Return an array of two integers denoting the respective comparison points.",
-  constraints: ["1 ≤ a[i] ≤ 100", "1 ≤ b[i] ≤ 100"],
-  examples: [
-    {
-      input: "5 6 7\n3 6 10",
-      output: "1 1",
-      explanation:
-        "Comparing the 0th elements, 5 > 3 so Alice receives a point. Comparing the 1st and 2nd elements, 6 = 6 and 7 < 10 so Bob receives a point. The return array is [1, 1].",
-    },
-  ],
-  testCases:[
-    {
-        input:"5 6 7\n3 6 10",
-        expectedOutput:"1 1",
-        output:"1 0",
-        staus:"Accepted"
-    },
-    {
-        input:"5 6 7\n3 6 10",
-        expectedOutput:"1 1",
-        output:"1 0",
-        staus:"Accepted"
-    },
-    {
-        input:"5 6 7\n3 6 10",
-        expectedOutput:"1 1",
-        output:"1 0",
-        staus:"Accepted"
-    },
-    {
-        input:"5 6 7\n3 6 10",
-        expectedOutput:"1 1",
-        output:"1 0",
-        staus:"Accepted"
-    },
-    {
-        input:"5 6 7\n3 6 10",
-        expectedOutput:"1 1",
-        output:"1 0",
-        staus:"Accepted"
-    }
-  ]
-};
+import api from "../axios/axios.config";
+import { useParams } from "react-router-dom";
 
-export default function ProblemPanel({ problem }) {
+export default function ProblemPanel({ problem ,isRunning,testCase,setTestCase}) {
   const [activeTab, setActiveTab] = useState("description");
+  const { problemId } = useParams();
+
+useEffect(()=>{
+    const loadTestCase=async()=>{
+      try{
+        const response=await api.get(`/problems/getSolutionForTestCases/${problemId}`);
+        console.log("Response for testCase",response.data.data);
+        setTestCase(response.data.data);
+      }catch(err){
+        console.log(err);
+      }
+    }
+    loadTestCase();
+  },[])
 
   return (
     <section className="w-[35%] flex flex-col border-r border-white/10 bg-[#1c1b1b] h-screen">
@@ -102,12 +67,17 @@ export default function ProblemPanel({ problem }) {
       </div>
 
       {/* ── Scrollable Content ── */}
-      <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto p-6 custom-scrollbar ">
         {activeTab === "description" && <Description problem={problem} />}
-        {activeTab === "testcases" && (
-          problem.testCases.map((testCase, index) => (
-            <TestCaseCard key={index} testCase={testCase} />
-          ))
+        {isRunning || (activeTab === "testcases") && (
+         testCase? testCase.map((testCase, index) => {
+          return (
+            <div>
+            <TestCaseCard key={index} testCase={testCase} index={index} className="mb-4" />
+            <div className="mb-4"></div>
+            </div>
+          );
+        }): <p> Loading test cases...</p>
         )}
       </div>
 

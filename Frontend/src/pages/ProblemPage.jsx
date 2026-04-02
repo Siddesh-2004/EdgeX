@@ -7,9 +7,10 @@ export default function ProblemPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [testResults, setTestResults] = useState(null);
-  const  [testCase,setTestCase] = useState(null);
   const { problemId } = useParams();
+  const [testCase,setTestCase] = useState(null);
   const [problem, setProblem] = useState(null);
+  const [running, setRunning] = useState(false);
   console.log(problemId)
   useEffect(()=>{
     const loadProblem=async()=>{
@@ -24,29 +25,17 @@ export default function ProblemPage() {
     }
     loadProblem();      
   },[])
-  useEffect(()=>{
-    const loadTestCase=async()=>{
-      try{
-        const response=await api.get(`/testCases/getTestCase/${problemId}`);
-        console.log(response.data.data);
-        setTestCase(response.data.data);
-      }catch(err){
-        console.log(err);
-      }
-    }
-    loadTestCase();
-  },[])
   const handleRun = async (code, language) => {
     setIsRunning(true);
-    setTestResults(null);
+   
     try {
       // Replace with your actual API call
       // const res = await api.post("/submissions/run", { code, language });
       // setTestResults(res.data);
       await new Promise((r) => setTimeout(r, 1500)); // simulate
-      setTestResults({ status: "success", output: "1 1" });
+     
     } catch (err) {
-      setTestResults({ status: "error", output: err.message });
+     console.log(err);
     } finally {
       setIsRunning(false);
     }
@@ -73,7 +62,7 @@ export default function ProblemPage() {
     <div className="flex h-screen overflow-hidden bg-[#131313]">
 
       {/* ── Left Panel (35%) ── */}
-      <ProblemPanel problem={problem} />
+      <ProblemPanel problem={problem} isRunning={isRunning} testCase={testCase} setTestCase={setTestCase}/>
 
       {/* ── Right Panel (65%) ── */}
       <CodeEditor
