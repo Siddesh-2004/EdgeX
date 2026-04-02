@@ -36,6 +36,14 @@ const testCaseSchema = new mongoose.Schema({
 });
 
 const problemSchema = new mongoose.Schema({
+    title:{
+      type:String,
+
+    },
+    difficulty:{
+      type:String,
+      maxlength:6
+    },
     question:{
         type:String,
         required:true,

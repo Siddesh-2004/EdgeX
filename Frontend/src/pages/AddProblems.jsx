@@ -7,13 +7,12 @@ export default function CreateProblem() {
   const [inputFormat, setInputFormat] = useState("");
   const [outputFormat, setOutputFormat] = useState("");
   const [constraints, setConstraints] = useState([{ id: 1, value: "" }]);
-  const [examples, setExamples] = useState([
-    {},
-  ]);
+  const [examples, setExamples] = useState([{}]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const navigate=useNavigate();
+  const [title, setTitle] = useState("");
+  const navigate = useNavigate();
 
   // ── Constraints ──
   const addConstraint = () =>
@@ -21,7 +20,9 @@ export default function CreateProblem() {
   const removeConstraint = (id) =>
     setConstraints((prev) => prev.filter((c) => c.id !== id));
   const updateConstraint = (id, value) =>
-    setConstraints((prev) => prev.map((c) => (c.id === id ? { ...c, value } : c)));
+    setConstraints((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, value } : c)),
+    );
 
   // ── Examples ──
   const addExample = () =>
@@ -33,7 +34,7 @@ export default function CreateProblem() {
     setExamples((prev) => prev.filter((e) => e.id !== id));
   const updateExample = (id, field, value) =>
     setExamples((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, [field]: value } : e))
+      prev.map((e) => (e.id === id ? { ...e, [field]: value } : e)),
     );
 
   // ── Submit ──
@@ -44,10 +45,14 @@ export default function CreateProblem() {
     setSubmitSuccess(false);
 
     const payload = {
+      title,
       question,
       inputFormat,
       outputFormat,
-      constraints: constraints.map((c) => c.value).filter(Boolean).join("\n"),
+      constraints: constraints
+        .map((c) => c.value)
+        .filter(Boolean)
+        .join("\n"),
       examples: examples.map(({ input, output, explanation }) => ({
         input,
         output,
@@ -64,15 +69,18 @@ export default function CreateProblem() {
       const problemId = res.data.data._id;
 
       setSubmitSuccess(true);
+      setTitle("");
       setQuestion("");
       setInputFormat("");
       setOutputFormat("");
       setConstraints([{ id: Date.now(), value: "" }]);
       setExamples([{ id: Date.now(), input: "", output: "", explanation: "" }]);
-      let path="/problems/"+problemId;
+      let path = "/problems/" + problemId;
       navigate(path);
     } catch (err) {
-      setSubmitError(err.response?.data?.message || err.message || "Failed to save problem.");
+      setSubmitError(
+        err.response?.data?.message || err.message || "Failed to save problem.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -81,12 +89,9 @@ export default function CreateProblem() {
   return (
     <div className="min-h-screen bg-[#131313] text-[#e5e2e1] font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d]">
       <main className="pt-12 pb-24 px-8 max-w-[1000px] mx-auto min-h-screen">
-
         {/* Header */}
         <header className="mb-12">
-          <div className="flex items-center gap-2 text-[#00daf3] mb-4">
-           
-          </div>
+          <div className="flex items-center gap-2 text-[#00daf3] mb-4"></div>
           <h1 className="font-['Space_Grotesk'] font-bold text-5xl tracking-tight text-[#e5e2e1] mb-4">
             Create New{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#c3f5ff] to-[#00e5ff]">
@@ -94,17 +99,29 @@ export default function CreateProblem() {
             </span>
           </h1>
           <p className="text-[#bac9cc] text-lg max-w-2xl leading-relaxed">
-            Define the parameters for a new algorithmic challenge. Precision in constraints ensures
-            high-quality solutions from the community.
+            Define the parameters for a new algorithmic challenge. Precision in
+            constraints ensures high-quality solutions from the community.
           </p>
         </header>
 
         <form className="space-y-10" onSubmit={handleSubmit}>
+          {/* ── Title Section ── */}
+          <section className="bg-[#201f1f] p-8 rounded-xl border border-[rgba(132,147,150,0.15)] relative overflow-hidden">
+            <label className="block font-['Space_Grotesk'] text-xl font-semibold mb-6 text-[#e5e2e1]">
+              Title (Name the Question)
+            </label>
+            <input type="text" className="w-full bg-[#0e0e0e] border-none rounded-lg p-6  font-['Inter'] text-[#e5e2e1] placeholder:text-[rgba(132,147,150,0.4)] focus:outline-none focus:ring-0 focus:border-b-2 focus:border-[#c3f5ff] transition-all resize-none leading-relaxed text-sm" placeholder="Two Sum" onChange={(e)=>setTitle(e.target.value)}/>
+
+
+          </section>
 
           {/* ── Question Section ── */}
           <section className="bg-[#201f1f] p-8 rounded-xl border border-[rgba(132,147,150,0.15)] relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-              <span className="material-symbols-outlined" style={{ fontSize: 64, fontVariationSettings: "'FILL' 1" }}>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: 64, fontVariationSettings: "'FILL' 1" }}
+              >
                 description
               </span>
             </div>
@@ -136,7 +153,9 @@ export default function CreateProblem() {
                 </label>
                 <textarea
                   className="w-full bg-[#0e0e0e] border-none rounded-lg px-4 py-3 font-['Inter'] text-sm text-[#e5e2e1] placeholder:text-[rgba(132,147,150,0.4)] focus:outline-none focus:ring-1 focus:ring-[#c3f5ff]/20 resize-none h-36 leading-relaxed"
-                  placeholder={"First line contains n (size of array).\nSecond line contains n space-separated integers.\nThird line contains target."}
+                  placeholder={
+                    "First line contains n (size of array).\nSecond line contains n space-separated integers.\nThird line contains target."
+                  }
                   value={inputFormat}
                   onChange={(e) => setInputFormat(e.target.value)}
                 />
@@ -147,7 +166,9 @@ export default function CreateProblem() {
                 </label>
                 <textarea
                   className="w-full bg-[#0e0e0e] border-none rounded-lg px-4 py-3 font-['Inter'] text-sm text-[#e5e2e1] placeholder:text-[rgba(132,147,150,0.4)] focus:outline-none focus:ring-1 focus:ring-[#c3f5ff]/20 resize-none h-36 leading-relaxed"
-                  placeholder={"Print two space-separated integers representing the indices of the two numbers."}
+                  placeholder={
+                    "Print two space-separated integers representing the indices of the two numbers."
+                  }
                   value={outputFormat}
                   onChange={(e) => setOutputFormat(e.target.value)}
                 />
@@ -171,7 +192,12 @@ export default function CreateProblem() {
                 <div key={c.id} className="flex gap-4 items-center group">
                   <div className="flex-grow bg-[#0e0e0e] rounded-lg overflow-hidden flex items-center">
                     <div className="px-4 py-3 bg-[#2a2a2a] text-[#00daf3] border-r border-[rgba(59,73,76,0.1)]">
-                      <span className="material-symbols-outlined" style={{ fontSize: 18 }}>key</span>
+                      <span
+                        className="material-symbols-outlined"
+                        style={{ fontSize: 18 }}
+                      >
+                        key
+                      </span>
                     </div>
                     <input
                       className="w-full bg-transparent border-none py-4 px-6 focus:outline-none focus:ring-0 text-[#e5e2e1] font-['JetBrains_Mono'] text-sm placeholder:text-[#849396]/40"
@@ -245,7 +271,9 @@ export default function CreateProblem() {
                         className="w-full bg-[#0e0e0e] border-none rounded-md px-4 py-3 font-['JetBrains_Mono'] text-sm text-[#9cf0ff] focus:outline-none focus:ring-1 focus:ring-[#c3f5ff]/20 resize-none h-28 leading-relaxed placeholder:text-[#849396]/40"
                         placeholder={"4\n2 7 11 15\n9"}
                         value={ex.input}
-                        onChange={(e) => updateExample(ex.id, "input", e.target.value)}
+                        onChange={(e) =>
+                          updateExample(ex.id, "input", e.target.value)
+                        }
                       />
                     </div>
                     <div className="space-y-2">
@@ -256,7 +284,9 @@ export default function CreateProblem() {
                         className="w-full bg-[#0e0e0e] border-none rounded-md px-4 py-3 font-['JetBrains_Mono'] text-sm text-[#ffdf96] focus:outline-none focus:ring-1 focus:ring-[#c3f5ff]/20 resize-none h-28 leading-relaxed placeholder:text-[#849396]/40"
                         placeholder={"0 1"}
                         value={ex.output}
-                        onChange={(e) => updateExample(ex.id, "output", e.target.value)}
+                        onChange={(e) =>
+                          updateExample(ex.id, "output", e.target.value)
+                        }
                       />
                     </div>
                   </div>
@@ -269,7 +299,9 @@ export default function CreateProblem() {
                       className="w-full bg-[#0e0e0e] border-none rounded-md px-4 py-3 font-['Inter'] text-sm text-[#bac9cc] h-24 focus:outline-none focus:ring-1 focus:ring-[#c3f5ff]/20 resize-none placeholder:text-[#849396]/40"
                       placeholder="Explain why the input leads to this output..."
                       value={ex.explanation}
-                      onChange={(e) => updateExample(ex.id, "explanation", e.target.value)}
+                      onChange={(e) =>
+                        updateExample(ex.id, "explanation", e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -324,7 +356,6 @@ export default function CreateProblem() {
               ✓ Problem saved successfully.
             </p>
           )}
-
         </form>
       </main>
     </div>

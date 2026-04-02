@@ -92,12 +92,14 @@ const getSolution = async (problemId) => {
 };
 
 const createProblem = asyncHandler(async (req, res) => {
-  const { question, examples, constraints,inputFormat,outputFormat } = req.body;
+  const { question, examples, constraints,inputFormat,outputFormat,title,difficulty } = req.body;
   if (!question || !examples || !constraints|| !inputFormat || !outputFormat) {
     throw new ApiError(400, "Missing required fields");
   }
   try {
     const problem = await ProblemModel.create({
+      title,
+      difficulty,
       question,
       examples,
       constraints,
@@ -115,8 +117,7 @@ const createProblem = asyncHandler(async (req, res) => {
   }
 });
 
-const createTestCases = asyncHandler(async (req, res) => {
-  const { problemId } = req.params;
+const createTestCases = async (problemId) => {
   if (!problemId) {
     throw new ApiError(400, "Missing required fields");
   }
@@ -177,15 +178,7 @@ Rules:
         if (!updatedProblem) {
           throw new ApiError(500, "Failed to update problem");
         }
-        return res
-          .status(200)
-          .json(
-            new ApiResponse(
-              updatedProblem,
-              "Test cases generated successfully",
-              200,
-            ),
-          );
+       break;
       }
       count++;
       new Promise((resolve) => setTimeout(resolve, 1000));
@@ -194,17 +187,24 @@ Rules:
     console.log(err);
     throw new ApiError(err.statusCode, "Failed toooo generate test cases");
   }
-});
+};
 
 const getSolutionForTestCases = asyncHandler(async (req, res) => {
   const { problemId } = req.params;
   if (!problemId) {
     throw new ApiError(400, "Missing required fields");
   }
+  try{
+    await createTestCases(problemId)
+  }catch(err){
+    console.error("Error creating problem:", err);
+    throw new ApiError(500, "Failed to create problem");
+  }
   const problem = await ProblemModel.findById(problemId);
   if (!problem) {
     throw new ApiError(404, "Problem not found");
   }
+
   const sourceCode = problem.solution;
   const testCases = problem.testCases;
   const submissions = [];

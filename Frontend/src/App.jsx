@@ -9,7 +9,7 @@ function App() {
     <Route path='/' element={<Layout/>} >
       <Route path='' element={<Landing />} />
       <Route path='addProblems' element={<AddProblems />} />
-      <Route path='problems/:id' element={<ProblemPage />} />
+      <Route path='problems/:problemId' element={<ProblemPage />} />
     </Route>
   ))
   return (

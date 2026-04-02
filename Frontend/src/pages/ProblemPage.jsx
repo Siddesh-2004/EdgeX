@@ -1,20 +1,41 @@
 import { useEffect, useState } from "react";
 import ProblemPanel from "../components/ProblemPanel";
 import CodeEditor from "../components/CodeEditor";
-import {useParams} from 'react-router-dom'
+import api from "../axios/axios.config";
+import {useParams} from "react-router-dom";
 export default function ProblemPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [testResults, setTestResults] = useState(null);
-  const {problemId}= useParams();
-  console.log(problemId);
-  const loadProblem=async()=>{
-    try{
-      const problem= await 
-    }catch(err){
-
+  const  [testCase,setTestCase] = useState(null);
+  const { problemId } = useParams();
+  const [problem, setProblem] = useState(null);
+  console.log(problemId)
+  useEffect(()=>{
+    const loadProblem=async()=>{
+      try{
+        const response=await api.get(`/problems/getProblem/${problemId}`);
+        console.log(response.data.data);
+        setProblem(response.data.data);
+        
+      }catch(err){
+        console.log(err);
+      }
     }
-  }
+    loadProblem();      
+  },[])
+  useEffect(()=>{
+    const loadTestCase=async()=>{
+      try{
+        const response=await api.get(`/testCases/getTestCase/${problemId}`);
+        console.log(response.data.data);
+        setTestCase(response.data.data);
+      }catch(err){
+        console.log(err);
+      }
+    }
+    loadTestCase();
+  },[])
   const handleRun = async (code, language) => {
     setIsRunning(true);
     setTestResults(null);
@@ -44,12 +65,15 @@ export default function ProblemPage() {
       setIsSubmitting(false);
     }
   };
+  if(!problem){
+    return <p>Loading..</p>
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#131313]">
 
       {/* ── Left Panel (35%) ── */}
-      <ProblemPanel />
+      <ProblemPanel problem={problem} />
 
       {/* ── Right Panel (65%) ── */}
       <CodeEditor

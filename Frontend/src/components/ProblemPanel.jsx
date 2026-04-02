@@ -53,7 +53,7 @@ const sampleProblem = {
   ]
 };
 
-export default function ProblemPanel({ problem = sampleProblem }) {
+export default function ProblemPanel({ problem }) {
   const [activeTab, setActiveTab] = useState("description");
 
   return (
