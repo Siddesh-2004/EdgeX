@@ -1,4 +1,4 @@
-package com.siddesh.EdgeXSpringBootBackend.dto.request.judge0;
+package com.siddesh.EdgeXSpringBootBackend.dto.judge0;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

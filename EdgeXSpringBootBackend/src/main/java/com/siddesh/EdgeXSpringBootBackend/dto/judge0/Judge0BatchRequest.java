@@ -1,4 +1,4 @@
-package com.siddesh.EdgeXSpringBootBackend.dto.request.judge0;
+package com.siddesh.EdgeXSpringBootBackend.dto.judge0;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
