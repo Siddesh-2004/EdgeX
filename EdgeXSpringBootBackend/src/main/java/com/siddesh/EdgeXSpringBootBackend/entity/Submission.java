@@ -30,8 +30,9 @@ public class Submission {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String sourceCode;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String language;
+    private Language language;
 
     // Placeholder as String for now — e.g. "PENDING", "ACCEPTED", "WRONG_ANSWER".
     // Will convert to a proper enum once the final status set is locked in.

@@ -48,7 +48,8 @@ public class Problem {
     @Column(columnDefinition = "TEXT")
     private String solution;
 
-    private String solutionLanguage;
+    @Enumerated(EnumType.STRING)
+    private Language solutionLanguage;
 
     @CreationTimestamp
     @Column(updatable = false)

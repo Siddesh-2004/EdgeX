@@ -10,4 +10,5 @@ public enum TestCaseCategory {
     DUPLICATES,
     ZERO_FALSY,
     PROBLEM_SPECIFIC,
+    EXAMPLE
 }
