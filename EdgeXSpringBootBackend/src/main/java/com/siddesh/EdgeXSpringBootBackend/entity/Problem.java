@@ -30,12 +30,18 @@ public class Problem {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String inputFormat;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String outputFormat;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Difficulty difficulty;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String constraints;
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Constraint> constraints = new ArrayList<>();
 
     // Reference/canonical solution used to generate expectedOutput for test cases via Judge0.
     // Nullable initially — filled in after AI generates it.

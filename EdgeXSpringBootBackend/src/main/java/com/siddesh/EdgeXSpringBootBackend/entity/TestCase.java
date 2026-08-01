@@ -25,10 +25,9 @@ public class TestCase {
     @Column(columnDefinition = "TEXT")
     private String expectedOutput;
 
-    // Placeholder as String for now — will convert to a proper enum
-    // once the final set of categories (example, cornerCase, duplicates, etc.) is locked in.
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String category;
+    private TestCaseCategory category;
 
     @ToString.Exclude
     @ManyToOne
