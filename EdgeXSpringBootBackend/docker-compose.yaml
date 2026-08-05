@@ -28,9 +28,11 @@ services:
     image: judge0/judge0:latest
     volumes:
       - ./judge0.conf:/judge0.conf:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
     ports:
       - "2358:2358"
     privileged: true
+    cgroup: host
     <<: *default-logging
     restart: always
     depends_on:
@@ -42,7 +44,9 @@ services:
     command: ["./scripts/workers"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
     privileged: true
+    cgroup: host
     <<: *default-logging
     restart: always
     depends_on:

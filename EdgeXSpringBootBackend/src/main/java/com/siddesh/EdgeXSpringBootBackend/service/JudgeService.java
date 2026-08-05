@@ -1,5 +1,6 @@
 package com.siddesh.EdgeXSpringBootBackend.service;
 
+import tools.jackson.databind.json.JsonMapper;
 import com.siddesh.EdgeXSpringBootBackend.dto.judge0.Judge0BatchRequest;
 import com.siddesh.EdgeXSpringBootBackend.dto.judge0.Judge0BatchResultResponse;
 import com.siddesh.EdgeXSpringBootBackend.dto.judge0.Judge0SubmissionRequest;
@@ -10,6 +11,9 @@ import com.siddesh.EdgeXSpringBootBackend.entity.TestCase;
 import com.siddesh.EdgeXSpringBootBackend.exception.JudgeExecutionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -30,6 +34,7 @@ public class JudgeService {
     private static final long TOTAL_TIMEOUT_MS = 30_000;
 
     private final RestTemplate restTemplate;
+    private final JsonMapper objectMapper;
 
     @Value("${judge0.base-url}")
     private String judge0BaseUrl;
@@ -56,9 +61,20 @@ public class JudgeService {
         String url = judge0BaseUrl + "/submissions/batch?base64_encoded=true";
 
         try {
+            // RestTemplate's default Jackson message converter streams the body
+            // without knowing its length upfront, forcing chunked transfer encoding
+            // regardless of the underlying HTTP client — Judge0's server fails to
+            // parse chunked bodies correctly. Serializing to byte[] ourselves first
+            // gives RestTemplate a known Content-Length, avoiding chunking entirely.
+            byte[] body = objectMapper.writeValueAsBytes(batchRequest);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<byte[]> requestEntity = new HttpEntity<>(body, headers);
+
             Judge0TokenResponse[] response = restTemplate.postForObject(
                     url,
-                    batchRequest,
+                    requestEntity,
                     Judge0TokenResponse[].class
             );
 
@@ -83,6 +99,8 @@ public class JudgeService {
 
         } catch (RestClientException ex) {
             throw new JudgeExecutionException("Failed to submit batch to Judge0: " + ex.getMessage());
+        } catch (Exception ex) {
+            throw new JudgeExecutionException("Failed to serialize batch request: " + ex.getMessage());
         }
     }
 
@@ -111,6 +129,7 @@ public class JudgeService {
             boolean allTerminal = results.stream().allMatch(r -> r.getStatus().isTerminal());
 
             if (allTerminal) {
+                System.out.println("Successfully polled Judge0 results for result "+results);
                 decodeOutputs(results);
                 return results;
             }
@@ -143,10 +162,13 @@ public class JudgeService {
                 result.setStderr(decodeBase64(result.getStderr()));
             }
         }
+        System.out.println("Decoded Judge0 outputs for results "+results);
     }
 
     private String decodeBase64(String value) {
-        return new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
+        // Judge0 sometimes appends a trailing newline to the base64 string itself,
+        // which Java's strict decoder rejects — trim before decoding.
+        return new String(Base64.getDecoder().decode(value.trim()), StandardCharsets.UTF_8);
     }
 
     private String encodeBase64(String value) {

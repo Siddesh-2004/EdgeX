@@ -33,4 +33,16 @@ public class TestCase {
     @ManyToOne
     @JoinColumn(name = "problem_id", nullable = false)
     private Problem problem;
+
+
+    @Override
+    public String toString() {
+        return "TestCase{" +
+                "id=" + id +
+                ", input='" + input + '\'' +
+                ", expectedOutput='" + expectedOutput + '\'' +
+                ", category=" + category +
+                ", problem=" + problem +
+                '}';
+    }
 }

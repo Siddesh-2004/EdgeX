@@ -20,4 +20,12 @@ public class Judge0Status {
     public boolean isTerminal() {
         return id >= 3;
     }
+
+    @Override
+    public String toString() {
+        return "Judge0Status{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

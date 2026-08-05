@@ -17,4 +17,16 @@ public class Judge0SubmissionResult {
     private String stderr;
     private String time;
     private Integer memory;
+
+    @Override
+    public String toString() {
+        return "Judge0SubmissionResult{" +
+                "token='" + token + '\'' +
+                ", status=" + status +
+                ", stdout='" + stdout + '\'' +
+                ", stderr='" + stderr + '\'' +
+                ", time='" + time + '\'' +
+                ", memory=" + memory +
+                '}';
+    }
 }

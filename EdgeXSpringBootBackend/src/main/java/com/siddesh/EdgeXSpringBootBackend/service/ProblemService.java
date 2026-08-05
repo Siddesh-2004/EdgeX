@@ -38,4 +38,17 @@ public class ProblemService {
                 .map(ProblemMapper::toResponse)
                 .toList();
     }
+
+    @Transactional
+    public void deleteProblem(Long id) {
+        if (!problemRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Problem", id);
+        }
+        problemRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteAllProblems() {
+        problemRepository.deleteAll();
+    }
 }
